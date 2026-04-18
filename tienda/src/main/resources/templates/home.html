@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Inicio</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        /* 🔥 FONDO ANIMADO + LUCES */
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            color: white;
+            background: linear-gradient(270deg, #0f172a, #1e293b, #0f172a);
+            background-size: 600% 600%;
+            animation: gradientMove 12s ease infinite;
+            overflow-x: hidden;
+        }
+
+        /* luces decorativas */
+        body::before, body::after {
+            content: "";
+            position: fixed;
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            filter: blur(100px);
+            z-index: 0;
+        }
+
+        body::before {
+            background: #3b82f6;
+            top: -100px;
+            left: -100px;
+        }
+
+        body::after {
+            background: #06b6d4;
+            bottom: -100px;
+            right: -100px;
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* HEADER */
+        .header {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 50px 80px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .header h1 {
+            font-size: 32px;
+            margin: 0;
+        }
+
+        /* BOTON */
+        .logout {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            padding: 12px 22px;
+            border-radius: 12px;
+            text-decoration: none;
+            color: white;
+            transition: 0.3s;
+        }
+
+        .logout:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 25px rgba(239,68,68,0.5);
+        }
+
+        /* FILAS */
+        .top-row, .bottom-row {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            justify-content: center;
+            gap: 35px;
+        }
+
+        .top-row {
+            margin-top: 40px;
+            margin-bottom: 35px;
+        }
+
+        /* CARDS */
+        .card {
+            width: 300px;
+            padding: 30px;
+            border-radius: 20px;
+            text-decoration: none;
+            color: white;
+
+            /* glass effect */
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(12px);
+
+            border: 1px solid rgba(255,255,255,0.15);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* brillo sutil */
+        .card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(120deg, transparent, rgba(255,255,255,0.15), transparent);
+            opacity: 0;
+            transition: 0.3s;
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        /* hover */
+        .card:hover {
+            transform: translateY(-12px) scale(1.03);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+        }
+
+        /* ICONO */
+        .icon-box {
+            width: 75px;
+            height: 75px;
+            border-radius: 18px;
+            background: linear-gradient(135deg, #3b82f6, #06b6d4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 20px rgba(59,130,246,0.4);
+        }
+
+        .material-icons {
+            font-size: 38px;
+        }
+
+        /* TEXTO */
+        .card h3 {
+            margin: 0;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .card p {
+            margin-top: 8px;
+            font-size: 14px;
+            color: #cbd5f5;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="header">
+    <h1>Panel de Control de la tienda</h1>
+    <a class="logout" th:href="@{/login}">Cerrar Sesión</a>
+</div>
+
+<div class="top-row">
+
+    <a class="card" th:href="@{/usuarios}">
+        <div class="icon-box"><span class="material-icons">people</span></div>
+        <h3>Usuarios</h3>
+        <p>Gestión del sistema</p>
+    </a>
+
+    <a class="card" th:href="@{/categorias}">
+        <div class="icon-box"><span class="material-icons">category</span></div>
+        <h3>Categorías</h3>
+        <p>Organización de productos</p>
+    </a>
+
+    <a class="card" th:href="@{/productos}">
+        <div class="icon-box"><span class="material-icons">inventory_2</span></div>
+        <h3>Productos</h3>
+        <p>Control de inventario</p>
+    </a>
+
+</div>
+
+<div class="bottom-row">
+
+    <a class="card" th:href="@{/pedidos}">
+        <div class="icon-box"><span class="material-icons">receipt_long</span></div>
+        <h3>Pedidos</h3>
+        <p>Control de ventas</p>
+    </a>
+
+    <a class="card" th:href="@{/detalle-pedidos}">
+        <div class="icon-box"><span class="material-icons">list_alt</span></div>
+        <h3>Detalle</h3>
+        <p>Información detallada</p>
+    </a>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Productos</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        /* 🌊 FONDO ANIMADO */
+        body {
+            margin: 0;
+            padding: 40px;
+            font-family: 'Poppins', sans-serif;
+            color: white;
+            background: linear-gradient(270deg, #0f172a, #1e293b, #0f172a);
+            background-size: 600% 600%;
+            animation: gradientMove 12s ease infinite;
+            min-height: 100vh;
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Luces de fondo */
+        body::before, body::after {
+            content: "";
+            position: fixed;
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            filter: blur(100px);
+            z-index: -1;
+        }
+        body::before { background: #3b82f6; top: -100px; left: -100px; }
+        body::after { background: #06b6d4; bottom: -100px; right: -100px; }
+
+        .titulo {
+            text-align: center;
+            font-size: 36px;
+            font-weight: 600;
+            margin-bottom: 30px;
+            letter-spacing: 1px;
+        }
+
+        /* 💎 CONTENEDOR GLASSMORPHISM */
+        .table-container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            overflow-x: auto; /* Para pantallas pequeñas */
+        }
+
+        /* 🔘 BOTONES */
+        .btn {
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-nuevo {
+            background: linear-gradient(135deg, #3b82f6, #06b6d4);
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .btn-editar {
+            background: rgba(59, 130, 246, 0.15);
+            color: #60a5fa;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            font-size: 13px;
+        }
+
+        .btn-eliminar {
+            background: rgba(239, 68, 68, 0.15);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            font-size: 13px;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            filter: brightness(1.2);
+        }
+
+        /* 📊 TABLA */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #cbd5f5;
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 1px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 14px;
+        }
+
+        tr:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        /* Etiquetas especiales */
+        .badge {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 13px;
+            color: #06b6d4;
+        }
+
+        .price {
+            font-weight: 600;
+            color: #4ade80; /* Verde suave para el precio */
+        }
+
+        .actions-cell {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .btn-back {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1 class="titulo">Inventario de Productos</h1>
+
+<div style="max-width: 1100px; margin: 0 auto;">
+
+    <a th:href="@{/productos/nuevo}" class="btn btn-nuevo">
+        <span class="material-icons">add_box</span> Nuevo Producto
+    </a>
+
+    <div class="table-container">
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Producto</th>
+                <th>Precio</th>
+                <th>Stock</th>
+                <th>Categoría</th>
+                <th style="text-align: center;">Acciones</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="producto : ${productos}">
+                <td th:text="${producto.idProducto}" style="color: #94a3b8;"></td>
+                <td>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span class="material-icons" style="color: #3b82f6; font-size: 20px;">inventory_2</span>
+                        <span th:text="${producto.nombreProducto}" style="font-weight: 600;"></span>
+                    </div>
+                </td>
+                <td class="price" th:text="'$' + ${producto.precioProducto}"></td>
+                <td>
+                    <span class="badge" th:text="${producto.stock} + ' unidades'"></span>
+                </td>
+                <td>
+                    <span style="color: #cbd5f5;" th:text="${producto.categoria.nombreCategoria}"></span>
+                </td>
+
+                <td class="actions-cell">
+                    <a th:href="@{/productos/editar/{id}(id=${producto.idProducto})}"
+                       class="btn btn-editar">
+                        <span class="material-icons" style="font-size: 16px;">edit</span>
+                    </a>
+
+                    <a th:href="@{/productos/eliminar/{id}(id=${producto.idProducto})}"
+                       class="btn btn-eliminar"
+                       onclick="return confirm('¿Seguro que deseas eliminar este producto?');">
+                        <span class="material-icons" style="font-size: 16px;">delete</span>
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <br>
+    <a th:href="@{/home}" class="btn btn-back">
+        <span class="material-icons">home</span> Volver al Inicio
+    </a>
+</div>
+
+</body>
+</html>

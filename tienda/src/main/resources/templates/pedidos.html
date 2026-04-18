@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Pedidos</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        /* 🌊 FONDO ANIMADO */
+        body {
+            margin: 0;
+            padding: 40px;
+            font-family: 'Poppins', sans-serif;
+            color: white;
+            background: linear-gradient(270deg, #0f172a, #1e293b, #0f172a);
+            background-size: 600% 600%;
+            animation: gradientMove 12s ease infinite;
+            min-height: 100vh;
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Luces de fondo decorativas */
+        body::before, body::after {
+            content: "";
+            position: fixed;
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            filter: blur(100px);
+            z-index: -1;
+        }
+        body::before { background: #3b82f6; top: -100px; left: -100px; }
+        body::after { background: #06b6d4; bottom: -100px; right: -100px; }
+
+        .titulo {
+            text-align: center;
+            font-size: 36px;
+            font-weight: 600;
+            margin-bottom: 30px;
+            letter-spacing: 1px;
+        }
+
+        /* 💎 CONTENEDOR TIPO GLASS */
+        .table-container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        /* 🔘 BOTONES */
+        .btn {
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-nuevo {
+            background: linear-gradient(135deg, #3b82f6, #06b6d4);
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .btn-editar {
+            background: rgba(59, 130, 246, 0.15);
+            color: #60a5fa;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            font-size: 14px;
+        }
+
+        .btn-eliminar {
+            background: rgba(239, 68, 68, 0.15);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            font-size: 14px;
+            margin-left: 5px;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            filter: brightness(1.2);
+        }
+
+        /* 📊 TABLA ESTILIZADA */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #cbd5f5;
+            text-transform: uppercase;
+            font-size: 13px;
+            letter-spacing: 1px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 15px;
+        }
+
+        tr:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        /* Estilo para el total y la fecha */
+        .total-highlight {
+            font-weight: 600;
+            color: #4ade80; /* Verde para transacciones económicas */
+        }
+
+        .fecha-text {
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+        .actions-cell {
+            display: flex;
+            justify-content: center;
+        }
+
+        .btn-back {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1 class="titulo">Historial de Pedidos</h1>
+
+<div style="max-width: 1100px; margin: 0 auto;">
+
+    <a th:href="@{/pedidos/nuevo}" class="btn btn-nuevo">
+        <span class="material-icons">add_shopping_cart</span> Nuevo Pedido
+    </a>
+
+    <div class="table-container">
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Fecha</th>
+                <th>Total</th>
+                <th>Usuario</th>
+                <th style="text-align: center;">Acciones</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="pedido : ${pedidos}">
+                <td th:text="${pedido.idPedido}" style="color: #06b6d4; font-weight: 600;"></td>
+                <td class="fecha-text">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span class="material-icons" style="font-size: 18px;">calendar_today</span>
+                        <span th:text="${pedido.fechaPedido}"></span>
+                    </div>
+                </td>
+                <td class="total-highlight" th:text="'$' + ${pedido.totalPedido}"></td>
+                <td>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span class="material-icons" style="font-size: 18px; color: #3b82f6;">account_circle</span>
+                        <span th:text="${pedido.usuario.nombreUsuario}"></span>
+                    </div>
+                </td>
+                <td class="actions-cell">
+                    <a th:href="@{/pedidos/editar/{id}(id=${pedido.idPedido})}"
+                       class="btn btn-editar">
+                        <span class="material-icons" style="font-size: 18px;">edit</span>
+                    </a>
+
+                    <a th:href="@{/pedidos/eliminar/{id}(id=${pedido.idPedido})}"
+                       class="btn btn-eliminar"
+                       onclick="return confirm('¿Seguro que deseas eliminar este pedido?');">
+                        <span class="material-icons" style="font-size: 18px;">delete</span>
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <br>
+    <a th:href="@{/home}" class="btn btn-back">
+        <span class="material-icons">home</span> Volver al Inicio
+    </a>
+</div>
+
+</body>
+</html>
